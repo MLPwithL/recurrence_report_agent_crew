@@ -1,6 +1,8 @@
 task_analysis:
   description: >
     使用 Report Reader Tool 读取 Report/ 文件夹中的 PDF / Word / Markdown / TXT 研报全文。
+    Report Reader Tool 会把全文缓存到 outputs/report_text_cache.md，并且每次只返回一段文本。
+    如果返回内容显示 [TRUNCATED]，必须继续用更大的 start_char 分块读取后续内容，不要只根据第一段下结论。
     然后提取全文逻辑摘要、策略框架、因子定义、公式、样本区间、回测方法和数据需求。
 
     禁止在未成功读取研报正文的情况下猜测策略逻辑。
