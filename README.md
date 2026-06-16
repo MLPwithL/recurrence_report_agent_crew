@@ -179,7 +179,7 @@ recurrence_report_agent/
 3. config/ 必须包含 agents.yaml 与 tasks.yaml。
 4. skills/<agent_name>/ 下的 .md 文件会按文件名升序自动加载并拼接进 Agent 的 backstory。
 5. logs/agents/ 由系统自动创建，无需手动维护。
-6. 运行时会自动把当前代码所在文件夹设为项目根目录，复制到其他电脑或其他路径后无需手动修改绝对路径。
+6. 运行时会自动定位当前代码所在文件夹，并以相对路径访问 Report/、raw_data/、outputs/ 和 logs/，复制到其他电脑或其他路径后无需手动修改路径。
 ```
 
 ---

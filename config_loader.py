@@ -17,23 +17,24 @@ from dotenv import load_dotenv
 # ---------------------------------------------------------------------------
 # 1. 路径常量
 # ---------------------------------------------------------------------------
-PROJECT_ROOT = Path(__file__).resolve().parent
+# PROJECT_ROOT is only used to locate the copied project folder and pin cwd.
+# All runtime paths below are relative to that folder, so no user-specific
+# absolute paths leak into CrewAI tools, task output files, or logs.
+PROJECT_ROOT = Path(os.getenv("RECURRENCE_REPORT_ROOT", Path(__file__).resolve().parent)).resolve()
+os.chdir(PROJECT_ROOT)
 
-CONFIG_DIR = PROJECT_ROOT / "config"
-SKILLS_DIR = PROJECT_ROOT / "skills"
-TARGET_DIR = PROJECT_ROOT / "Report"
-OUTPUTS_DIR = PROJECT_ROOT / "outputs"
-RAW_DATA_DIR = PROJECT_ROOT / "raw_data"
-LOGS_DIR = PROJECT_ROOT / "logs"
+CONFIG_DIR = Path("config")
+SKILLS_DIR = Path("skills")
+TARGET_DIR = Path("Report")
+OUTPUTS_DIR = Path("outputs")
+RAW_DATA_DIR = Path("raw_data")
+LOGS_DIR = Path("logs")
 AGENT_LOG_DIR = LOGS_DIR / "agents"
 
-# CrewAI tools enforce a filesystem safety boundary based on the process cwd.
-# Keep cwd pinned to this copied project folder so tools never inherit a stale
-# IDE or shell working directory from another machine/path.
-TOOL_REPORT_DIR = "Report"
-TOOL_OUTPUTS_DIR = "outputs"
-TOOL_RAW_DATA_DIR = "raw_data"
-TOOL_AGENT_LOG_DIR = str(Path("logs") / "agents")
+TOOL_REPORT_DIR = str(TARGET_DIR)
+TOOL_OUTPUTS_DIR = str(OUTPUTS_DIR)
+TOOL_RAW_DATA_DIR = str(RAW_DATA_DIR)
+TOOL_AGENT_LOG_DIR = str(AGENT_LOG_DIR)
 
 # Agent 名 -> 留痕日志文件
 AGENT_LOG_FILES: Dict[str, Path] = {
@@ -58,10 +59,10 @@ def ensure_dirs() -> None:
 def load_env() -> None:
     """加载 .env，优先顺序：.env > .env.proxy > .env.proxy.example > .env.example。"""
     candidates = [
-        PROJECT_ROOT / ".env",
-        PROJECT_ROOT / ".env.proxy",
-        PROJECT_ROOT / ".env.proxy.example",
-        PROJECT_ROOT / ".env.example",
+        Path(".env"),
+        Path(".env.proxy"),
+        Path(".env.proxy.example"),
+        Path(".env.example"),
     ]
     for p in candidates:
         if p.exists():
@@ -71,7 +72,7 @@ def load_env() -> None:
 
 
 def _legacy_api_key() -> Optional[str]:
-    legacy = PROJECT_ROOT / "api_key.txt"
+    legacy = Path("api_key.txt")
     if legacy.exists():
         return legacy.read_text(encoding="utf-8").strip()
     return None
