@@ -58,8 +58,16 @@ if ($mode -eq "1") {
     Write-Host "Selected: proxy configuration"
 
     $proxyBase = Ask-WithDefault "Enter proxy OpenAI API Base" "https://4router.net/v1"
-    $proxyAnthropicBase = Ask-WithDefault "Enter proxy Anthropic Base URL" "https://4router.net"
-    $proxyKey = Ask-Required "Enter proxy API Key"
+    $proxyKey = Ask-Required "Enter proxy OpenAI API Key"
+
+    $sameClaude = Read-Host "Use the same proxy base and key for Anthropic/Claude? Enter y for yes, anything else for separate config"
+    if ($sameClaude.ToLower() -eq "y") {
+        $proxyAnthropicBase = $proxyBase
+        $proxyAnthropicKey = $proxyKey
+    } else {
+        $proxyAnthropicBase = Ask-WithDefault "Enter proxy Anthropic Base URL" "https://4router.net"
+        $proxyAnthropicKey = Ask-Required "Enter proxy Anthropic API Key"
+    }
 
     $modelAnalysis = Ask-WithDefault "Enter MODEL_ANALYSIS" "gpt-5.5"
     $modelCoderApi = Ask-WithDefault "Enter MODEL_CODER_API for reproduction agent LLM" "gpt-5.4-mini"
@@ -82,7 +90,7 @@ MODEL_MANAGER_SUMMARY=$modelManagerSummary
 CODER_EXECUTION_MODE=$coderExecutionMode
 
 # --- Anthropic models (Claude) ---
-ANTHROPIC_API_KEY=$proxyKey
+ANTHROPIC_API_KEY=$proxyAnthropicKey
 ANTHROPIC_BASE_URL=$proxyAnthropicBase
 MODEL_DATA_PROCESS=$modelDataProcess
 "@
