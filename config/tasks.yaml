@@ -1,0 +1,23 @@
+task_analysis:
+  description: "使用工具读取 'Report/' 文件夹中的 PDF / Word 研报，提取全文逻辑摘要，并列出回测所需要的具体数据清单。"
+  expected_output: "两部分内容：1. 研报详细摘要；2. 严格的数据需求列表（包含字段名、频率等）。"
+
+task_data_process:
+  description: "读取 outputs/summary.md、outputs/data_requirements.md 和 raw_data/ 中的实际原始数据，编写完整的数据清洗 Python 脚本。严格遵守你的系统约束。"
+  expected_output: "只输出可直接保存为 outputs/data_clean.py 并运行的纯 Python 代码，不要包含 Markdown 代码围栏或解释性散文。"
+
+task_manager_review_data:
+  description: "审查 outputs/data_clean.py，并基于 outputs/data_requirements.md 与 raw_data/ 的实际文件判断清洗逻辑是否合理。如果允许代码执行，应运行脚本；如果报错，记录可复现错误。"
+  expected_output: "输出 Markdown 数据概述和审查结论，内容用于保存为 outputs/data_overview.md。"
+
+task_reproduction:
+  description: "读取 outputs/summary.md、outputs/data_requirements.md、outputs/data_overview.md、outputs/data_clean.py 和 raw_data/ 的实际数据结构，编写研报复现的 Python 回测代码。"
+  expected_output: "只输出可直接保存为 outputs/backtest.py 并运行的纯 Python 代码，不要包含 Markdown 代码围栏或解释性散文。"
+
+task_manager_review_code:
+  description: "审查并运行 outputs/backtest.py。确保没有语法错误、明显逻辑漏洞、未来函数和错误读取路径。"
+  expected_output: "回测代码的运行结果日志和最终确认。"
+
+task_summary:
+  description: "读取 outputs/ 下的阶段产物和 logs/agents/ 下的 Agent 留痕，撰写一份项目最终总结报告。"
+  expected_output: "包含项目背景、数据处理说明、代码执行情况的 Markdown 文档。"
