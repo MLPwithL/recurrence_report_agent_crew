@@ -27,6 +27,14 @@ RAW_DATA_DIR = PROJECT_ROOT / "raw_data"
 LOGS_DIR = PROJECT_ROOT / "logs"
 AGENT_LOG_DIR = LOGS_DIR / "agents"
 
+# CrewAI tools enforce a filesystem safety boundary based on the process cwd.
+# Keep cwd pinned to this copied project folder so tools never inherit a stale
+# IDE or shell working directory from another machine/path.
+TOOL_REPORT_DIR = "Report"
+TOOL_OUTPUTS_DIR = "outputs"
+TOOL_RAW_DATA_DIR = "raw_data"
+TOOL_AGENT_LOG_DIR = str(Path("logs") / "agents")
+
 # Agent 名 -> 留痕日志文件
 AGENT_LOG_FILES: Dict[str, Path] = {
     "analysis_agent": AGENT_LOG_DIR / "analysis_agent.md",
@@ -39,6 +47,7 @@ AGENT_LOG_FILES: Dict[str, Path] = {
 
 def ensure_dirs() -> None:
     """确保运行时所需目录全部存在。"""
+    os.chdir(PROJECT_ROOT)
     for d in (TARGET_DIR, OUTPUTS_DIR, RAW_DATA_DIR, LOGS_DIR, AGENT_LOG_DIR):
         d.mkdir(parents=True, exist_ok=True)
 

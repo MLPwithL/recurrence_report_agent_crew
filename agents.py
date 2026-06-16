@@ -8,10 +8,10 @@ from crewai import Agent, LLM
 from crewai_tools import DirectoryReadTool, DOCXSearchTool, PDFSearchTool
 
 from config_loader import (
-    AGENT_LOG_DIR,
-    OUTPUTS_DIR,
-    RAW_DATA_DIR,
-    TARGET_DIR,
+    TOOL_AGENT_LOG_DIR,
+    TOOL_OUTPUTS_DIR,
+    TOOL_RAW_DATA_DIR,
+    TOOL_REPORT_DIR,
     get_anthropic_api_key,
     get_model_config,
     get_openai_api_key,
@@ -66,11 +66,10 @@ def _build_agent(name: str, llm, tools: Optional[list] = None, **extra) -> Agent
 # ---------------------------------------------------------------------------
 def build_analysis_agent() -> Agent:
     cfg = get_model_config()
-    target = str(TARGET_DIR)
     tools = [
-        DirectoryReadTool(directory=target),
-        PDFSearchTool(search_kwargs={"folder": target}),
-        DOCXSearchTool(search_kwargs={"folder": target}),
+        DirectoryReadTool(directory=TOOL_REPORT_DIR),
+        PDFSearchTool(search_kwargs={"folder": TOOL_REPORT_DIR}),
+        DOCXSearchTool(search_kwargs={"folder": TOOL_REPORT_DIR}),
     ]
     return _build_agent(
         "analysis_agent",
@@ -84,8 +83,8 @@ def build_analysis_agent() -> Agent:
 # ---------------------------------------------------------------------------
 def build_data_processing_agent() -> Agent:
     cfg = get_model_config()
-    raw_tool = DirectoryReadTool(directory=str(RAW_DATA_DIR))
-    outputs_tool = DirectoryReadTool(directory=str(OUTPUTS_DIR))
+    raw_tool = DirectoryReadTool(directory=TOOL_RAW_DATA_DIR)
+    outputs_tool = DirectoryReadTool(directory=TOOL_OUTPUTS_DIR)
     return _build_agent(
         "data_processing_agent",
         llm=_anthropic_llm(cfg["model_data_process"], temperature=0.1),
@@ -96,8 +95,8 @@ def build_data_processing_agent() -> Agent:
 def build_reproduction_agent() -> Agent:
     cfg = get_model_config()
     mode = (cfg["coder_execution_mode"] or "API").upper()
-    outputs_tool = DirectoryReadTool(directory=str(OUTPUTS_DIR))
-    raw_tool = DirectoryReadTool(directory=str(RAW_DATA_DIR))
+    outputs_tool = DirectoryReadTool(directory=TOOL_OUTPUTS_DIR)
+    raw_tool = DirectoryReadTool(directory=TOOL_RAW_DATA_DIR)
     tools = [outputs_tool, raw_tool]
     if mode == "CLI_CODEX":
         tools.append(codex_cli_tool)
@@ -113,8 +112,8 @@ def build_manager_agent() -> Agent:
         "manager_agent",
         llm=_openai_llm(cfg["model_manager_summary"], temperature=0.4),
         tools=[
-            DirectoryReadTool(directory=str(OUTPUTS_DIR)),
-            DirectoryReadTool(directory=str(RAW_DATA_DIR)),
+            DirectoryReadTool(directory=TOOL_OUTPUTS_DIR),
+            DirectoryReadTool(directory=TOOL_RAW_DATA_DIR),
         ],
         allow_code_execution=True,
         allow_delegation=True,
@@ -127,8 +126,8 @@ def build_summary_agent() -> Agent:
         "summary_agent",
         llm=_openai_llm(cfg["model_manager_summary"], temperature=0.5),
         tools=[
-            DirectoryReadTool(directory=str(OUTPUTS_DIR)),
-            DirectoryReadTool(directory=str(AGENT_LOG_DIR)),
+            DirectoryReadTool(directory=TOOL_OUTPUTS_DIR),
+            DirectoryReadTool(directory=TOOL_AGENT_LOG_DIR),
         ],
     )
 
