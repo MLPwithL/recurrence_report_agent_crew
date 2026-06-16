@@ -2,6 +2,7 @@
 
 from .claude_code_cli import claude_code_cli_tool
 from .codex_cli import codex_cli_tool
+from .report_reader_tool import ReportReaderTool
 from .agent_logger import (
     AgentLogger,
     install_agent_logging,
@@ -12,6 +13,7 @@ from .agent_logger import (
 __all__ = [
     "codex_cli_tool",
     "claude_code_cli_tool",
+    "ReportReaderTool",
     "AgentLogger",
     "install_agent_logging",
     "log_event",

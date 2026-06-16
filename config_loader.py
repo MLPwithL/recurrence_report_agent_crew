@@ -175,7 +175,7 @@ def require_raw_data() -> None:
 
 
 def require_reports() -> None:
-    report_suffixes = {".pdf", ".doc", ".docx"}
+    report_suffixes = {".pdf", ".docx", ".txt", ".md"}
     if not TARGET_DIR.exists():
         print(f"[ERROR] 未检测到研报目录 '{TARGET_DIR}'，请先创建并放入 PDF / Word 研报。")
         sys.exit(1)

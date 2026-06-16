@@ -1,6 +1,19 @@
 task_analysis:
-  description: "使用工具读取 'Report/' 文件夹中的 PDF / Word 研报，提取全文逻辑摘要，并列出回测所需要的具体数据清单。"
-  expected_output: "两部分内容：1. 研报详细摘要；2. 严格的数据需求列表（包含字段名、频率等）。"
+  description: >
+    使用 Report Reader Tool 读取 Report/ 文件夹中的 PDF / Word / Markdown / TXT 研报全文。
+    然后提取全文逻辑摘要、策略框架、因子定义、公式、样本区间、回测方法和数据需求。
+
+    禁止在未成功读取研报正文的情况下猜测策略逻辑。
+
+    你必须在输出中记录：
+    1. 读取了哪些研报文件；
+    2. 是否成功提取正文；
+    3. 提取了哪些核心信息；
+    4. 输出了哪些文件；
+    5. 是否存在无法识别或无法解析的内容。
+  expected_output: >
+    一份 Markdown 格式的研报摘要，包含研究背景、核心逻辑、策略方法、回测设计、
+    数据需求和初步复现判断。
 
 task_data_process:
   description: "读取 outputs/summary.md、outputs/data_requirements.md 和 raw_data/ 中的实际原始数据，编写完整的数据清洗 Python 脚本。严格遵守你的系统约束。"

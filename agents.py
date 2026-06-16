@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Optional
 
 from crewai import Agent, LLM
-from crewai_tools import DirectoryReadTool, DOCXSearchTool, PDFSearchTool
+from crewai_tools import DirectoryReadTool
 
 from config_loader import (
     TOOL_AGENT_LOG_DIR,
@@ -18,7 +18,7 @@ from config_loader import (
     load_agents_yaml,
     load_agent_skills,
 )
-from tools import claude_code_cli_tool, codex_cli_tool
+from tools import ReportReaderTool, claude_code_cli_tool, codex_cli_tool
 
 
 # ---------------------------------------------------------------------------
@@ -68,8 +68,7 @@ def build_analysis_agent() -> Agent:
     cfg = get_model_config()
     tools = [
         DirectoryReadTool(directory=TOOL_REPORT_DIR),
-        PDFSearchTool(search_kwargs={"folder": TOOL_REPORT_DIR}),
-        DOCXSearchTool(search_kwargs={"folder": TOOL_REPORT_DIR}),
+        ReportReaderTool(),
     ]
     return _build_agent(
         "analysis_agent",
