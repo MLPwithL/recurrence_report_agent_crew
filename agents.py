@@ -4,10 +4,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from crewai import Agent
+from crewai import Agent, LLM
 from crewai_tools import DirectoryReadTool, DOCXSearchTool, PDFSearchTool
-from langchain_anthropic import ChatAnthropic
-from langchain_openai import ChatOpenAI
 
 from config_loader import (
     AGENT_LOG_DIR,
@@ -26,21 +24,21 @@ from tools import claude_code_cli_tool, codex_cli_tool
 # ---------------------------------------------------------------------------
 # LLM 工厂
 # ---------------------------------------------------------------------------
-def _openai_llm(model_name: str, temperature: float = 0.3) -> ChatOpenAI:
+def _openai_llm(model_name: str, temperature: float = 0.3) -> LLM:
     cfg = get_model_config()
-    return ChatOpenAI(
-        model_name=model_name,
-        openai_api_key=get_openai_api_key(),
-        openai_api_base=cfg["openai_api_base"] or None,
+    return LLM(
+        model=model_name,
+        api_key=get_openai_api_key(),
+        base_url=cfg["openai_api_base"] or None,
         temperature=temperature,
     )
 
 
-def _anthropic_llm(model_name: str, temperature: float = 0.1) -> ChatAnthropic:
+def _anthropic_llm(model_name: str, temperature: float = 0.1) -> LLM:
     cfg = get_model_config()
-    return ChatAnthropic(
+    return LLM(
         model=model_name,
-        anthropic_api_key=get_anthropic_api_key(),
+        api_key=get_anthropic_api_key(),
         base_url=cfg["anthropic_base_url"] or None,
         temperature=temperature,
     )
